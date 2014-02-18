@@ -1,32 +1,6 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-public class Point
-{
-    public float x;
-    public float y;
-    public float z;
-
-    public Point(Point p)
-    {
-        x = p.x;
-        y = p.y;
-        z = p.z;
-    }
-
-    public Point(float x, float y, float z)
-    {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-
-    public bool isInside(int res)
-    {
-        return x >= 0 && x < res && y >= 0 && y < res;
-    }
-}
-
 public class DiamondSquare
 {
     private int _res;
@@ -134,10 +108,10 @@ public class DiamondSquare
             for (j = 0; j < _res - 1; j += _iterationStep)
             {
                 Process(
-                    new Point(i, j, _heights[i, j]),
-                    new Point(i + _iterationStep, j, _heights[i + _iterationStep, j]),
-                    new Point(i, j + _iterationStep, _heights[i, j + _iterationStep]),
-                    new Point(i + _iterationStep, j + _iterationStep, _heights[i, j + _iterationStep])
+                    new Vector3(i, j, _heights[i, j]),
+                    new Vector3(i + _iterationStep, j, _heights[i + _iterationStep, j]),
+                    new Vector3(i, j + _iterationStep, _heights[i, j + _iterationStep]),
+                    new Vector3(i + _iterationStep, j + _iterationStep, _heights[i, j + _iterationStep])
                 );
             }
         }
@@ -145,21 +119,21 @@ public class DiamondSquare
         _iterationStep /= 2;
     }
 
-    private void Process(Point p1, Point p2, Point p3, Point p4)
+    private void Process(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
     {
         // Diamond step
-        Point dMid = DiamondStep(p1, p2, p3, p4);
+        Vector3 dMid = DiamondStep(p1, p2, p3, p4);
 
         // Square step
-        SquareStep(null, p1, p2, dMid, 1);
-        SquareStep(p1, null, dMid, p3, 2);
-        SquareStep(p2, dMid, null, p4, 3);
-        SquareStep(dMid, p3, p4, null, 4);
+        SquareStep(Vector3.zero, p1, p2, dMid, 1);
+        SquareStep(p1, Vector3.zero, dMid, p3, 2);
+        SquareStep(p2, dMid, Vector3.zero, p4, 3);
+        SquareStep(dMid, p3, p4, Vector3.zero, 4);
     }
 
-    private Point DiamondStep(Point p1, Point p2, Point p3, Point p4)
+    private Vector3 DiamondStep(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)
     {
-        Point dMid = new Point(
+        Vector3 dMid = new Vector3(
             (p1.x + p2.x) / 2,
             (p1.y + p3.y) / 2,
             _avg(p1.z, p2.z, p3.z, p4.z)
@@ -168,35 +142,30 @@ public class DiamondSquare
         return dMid;
     }
 
-    private void SquareStep(Point p1, Point p2, Point p3, Point p4, int nullIndex)
+    private void SquareStep(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, int nullIndex)
     {
-        Point nullPoint;
         switch (nullIndex)
         {
             case 1:
-                nullPoint = p1 = new Point(p4.x, (2 * p2.y - p4.y), 0.0f);
+                p1 = new Vector3(p4.x, (2 * p2.y - p4.y), 0.0f);
+                _initializeHeight(ref p1);
                 break;
             case 2:
-                nullPoint = p2 = new Point((2 * p1.x - p3.x), p3.y, 0.0f);
+                p2 = new Vector3((2 * p1.x - p3.x), p3.y, 0.0f);
+                _initializeHeight(ref p2);
                 break;
             case 3:
-                nullPoint = p3 = new Point((2 * p1.x - p2.x), p2.y, 0.0f);
+                p3 = new Vector3((2 * p1.x - p2.x), p2.y, 0.0f);
+                _initializeHeight(ref p3);
                 break;
             case 4:
             default:
-                nullPoint = p4 = new Point(p1.x, (2 * p2.y - p1.y), 0.0f);
+                p4 = new Vector3(p1.x, (2 * p2.y - p1.y), 0.0f);
+                _initializeHeight(ref p4);
                 break;
         }
 
-        if (_isPointInside(nullPoint, _res))
-        {
-            nullPoint.z = _heights[(int)nullPoint.x, (int)nullPoint.y];
-        }
-        else
-        {
-            nullPoint.z = _outsideHeight;
-        }
-        Point sqMid = new Point(
+        Vector3 sqMid = new Vector3(
             (p2.x + p3.x) / 2,
             (p1.y + p4.y) / 2,
             _avg(p1.z, p2.z, p3.z, p4.z)
@@ -204,7 +173,12 @@ public class DiamondSquare
         _heights[(int)sqMid.x, (int)sqMid.y] = sqMid.z += Random.Range(-_variation, _variation);
     }
 
-    private static bool _isPointInside(Point point, float res)
+    private void _initializeHeight(ref Vector3 point)
+    {
+        point.z = _isPointInside(point, _res) ? _heights[(int)point.x, (int)point.y] : _outsideHeight;
+    }
+
+    private static bool _isPointInside(Vector3 point, float res)
     {
         return point.x >= 0 && point.x < res && point.y >= 0 && point.y < res;
     }
