@@ -1,5 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Linq;
+using UnityEngine;
 
 public class Point
 {
@@ -159,7 +159,11 @@ public class DiamondSquare
 
     private Point DiamondStep(Point p1, Point p2, Point p3, Point p4)
     {
-        Point dMid = new Point((int)((p1.x + p2.x) / 2), (int)((p1.y + p3.y) / 2), _average(p1.z, p2.z, p3.z, p4.z));
+        Point dMid = new Point(
+            (p1.x + p2.x) / 2,
+            (p1.y + p3.y) / 2,
+            _avg(p1.z, p2.z, p3.z, p4.z)
+        );
         _heights[(int)dMid.x, (int)dMid.y] = dMid.z += Random.Range(-_variation, _variation);
         return dMid;
     }
@@ -170,17 +174,17 @@ public class DiamondSquare
         switch (nullIndex)
         {
             case 1:
-                nullPoint = p1 = new Point(p4.x, (int)(p4.y - (p4.y - p2.y) * 2), 0.0f);
+                nullPoint = p1 = new Point(p4.x, (2 * p2.y - p4.y), 0.0f);
                 break;
             case 2:
-                nullPoint = p2 = new Point((int)(p3.x - (p3.x - p1.x) * 2), p3.y, 0.0f);
+                nullPoint = p2 = new Point((2 * p1.x - p3.x), p3.y, 0.0f);
                 break;
             case 3:
-                nullPoint = p3 = new Point((int)(p2.x + (p1.x - p2.x) * 2), p2.y, 0.0f);
+                nullPoint = p3 = new Point((2 * p1.x - p2.x), p2.y, 0.0f);
                 break;
             case 4:
             default:
-                nullPoint = p4 = new Point(p1.x, (int)(p1.y + (p2.y - p1.y) * 2), 0.0f);
+                nullPoint = p4 = new Point(p1.x, (2 * p2.y - p1.y), 0.0f);
                 break;
         }
 
@@ -192,7 +196,11 @@ public class DiamondSquare
         {
             nullPoint.z = _outsideHeight;
         }
-        Point sqMid = new Point((int)((p2.x + p3.x) / 2), (int)((p1.y + p4.y) / 2), _average(p1.z, p2.z, p3.z, p4.z));
+        Point sqMid = new Point(
+            (p2.x + p3.x) / 2,
+            (p1.y + p4.y) / 2,
+            _avg(p1.z, p2.z, p3.z, p4.z)
+         );
         _heights[(int)sqMid.x, (int)sqMid.y] = sqMid.z += Random.Range(-_variation, _variation);
     }
 
@@ -201,8 +209,8 @@ public class DiamondSquare
         return point.x >= 0 && point.x < res && point.y >= 0 && point.y < res;
     }
 
-    private static float _average(float x1, float x2, float x3, float x4)
+    private static float _avg(params float[] numbers)
     {
-        return (x1 + x2 + x3 + x4) / 4;
+        return numbers.Average();
     }
 }
