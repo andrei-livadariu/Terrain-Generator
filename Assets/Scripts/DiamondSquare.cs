@@ -1,25 +1,24 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections;
 
 public class Point
 {
-    public int x;
-    public int y;
-    public float height;
+    public float x;
+    public float y;
+    public float z;
 
     public Point(Point p)
     {
         x = p.x;
         y = p.y;
-        height = p.height;
+        z = p.z;
     }
 
-    public Point(int x, int y, float height)
+    public Point(float x, float y, float z)
     {
         this.x = x;
         this.y = y;
-        this.height = height;
+        this.z = z;
     }
 
     public bool isInside(int res)
@@ -30,16 +29,15 @@ public class Point
 
 public class DiamondSquare
 {
-    private System.Random _rng = new System.Random();
     private int _res;
     private float[,] _heights;
     private int _iterationStep;
 
     private float[] _seeds;
-    private double _variation;
-    private double _H;
+    private float _variation;
+    private float _H;
     private float _outsideHeight;
-    private double _heightScaling;
+    private float _heightScaling;
 
     public int Resolution
     {
@@ -53,7 +51,7 @@ public class DiamondSquare
 
     public DiamondSquare(DiamondSquareParameters parameters)
     {
-        _res = (int)Math.Pow(2, parameters.nrIterations) + 1;
+        _res = (int)Mathf.Pow(2, parameters.nrIterations) + 1;
         _heights = new float[_res, _res];
 
         _seeds = parameters.seeds;
@@ -126,11 +124,6 @@ public class DiamondSquare
         return heights;
     }
 
-    private static float Average(float x1, float x2, float x3, float x4)
-    {
-        return (x1 + x2 + x3 + x4) / 4;
-    }
-
     public void Iterate()
     {
         int i, j;
@@ -146,7 +139,7 @@ public class DiamondSquare
                 );
             }
         }
-        _variation *= Math.Pow(2, -_H);
+        _variation *= Mathf.Pow(2, -_H);
         _iterationStep /= 2;
     }
 
@@ -156,47 +149,58 @@ public class DiamondSquare
         Point dMid = DiamondStep(p1, p2, p3, p4);
 
         // Square step
-        SquareStep(null, p1, p2, dMid);
-        SquareStep(p1, null, dMid, p3);
-        SquareStep(p2, dMid, null, p4);
-        SquareStep(dMid, p3, p4, null);
+        SquareStep(null, p1, p2, dMid, 1);
+        SquareStep(p1, null, dMid, p3, 2);
+        SquareStep(p2, dMid, null, p4, 3);
+        SquareStep(dMid, p3, p4, null, 4);
     }
 
     private Point DiamondStep(Point p1, Point p2, Point p3, Point p4)
     {
-        Point dMid = new Point((int)((p1.x + p2.x) / 2), (int)((p1.y + p3.y) / 2), Average(p1.height, p2.height, p3.height, p4.height));
-        _heights[dMid.x, dMid.y] = dMid.height = (float)(dMid.height + (_rng.NextDouble() * 2 - 1.0f) * _variation);
+        Point dMid = new Point((int)((p1.x + p2.x) / 2), (int)((p1.y + p3.y) / 2), _average(p1.z, p2.z, p3.z, p4.z));
+        _heights[(int)dMid.x, (int)dMid.y] = dMid.z += Random.Range(-_variation, _variation);
         return dMid;
     }
 
-    private void SquareStep(Point p1, Point p2, Point p3, Point p4)
+    private void SquareStep(Point p1, Point p2, Point p3, Point p4, int nullIndex)
     {
         Point nullPoint;
-        if (p1 == null)
+        switch (nullIndex)
         {
-            nullPoint = p1 = new Point(p4.x, (int)(p4.y - (p4.y - p2.y) * 2), 0.0f);
+            case 1:
+                nullPoint = p1 = new Point(p4.x, (int)(p4.y - (p4.y - p2.y) * 2), 0.0f);
+                break;
+            case 2:
+                nullPoint = p2 = new Point((int)(p3.x - (p3.x - p1.x) * 2), p3.y, 0.0f);
+                break;
+            case 3:
+                nullPoint = p3 = new Point((int)(p2.x + (p1.x - p2.x) * 2), p2.y, 0.0f);
+                break;
+            case 4:
+            default:
+                nullPoint = p4 = new Point(p1.x, (int)(p1.y + (p2.y - p1.y) * 2), 0.0f);
+                break;
         }
-        else if (p2 == null)
+
+        if (_isPointInside(nullPoint, _res))
         {
-            nullPoint = p2 = new Point((int)(p3.x - (p3.x - p1.x) * 2), p3.y, 0.0f);
-        }
-        else if (p3 == null)
-        {
-            nullPoint = p3 = new Point((int)(p2.x + (p1.x - p2.x) * 2), p2.y, 0.0f);
+            nullPoint.z = _heights[(int)nullPoint.x, (int)nullPoint.y];
         }
         else
         {
-            nullPoint = p4 = new Point(p1.x, (int)(p1.y + (p2.y - p1.y) * 2), 0.0f);
+            nullPoint.z = _outsideHeight;
         }
-        if (nullPoint.isInside(_res))
-        {
-            nullPoint.height = _heights[nullPoint.x, nullPoint.y];
-        }
-        else
-        {
-            nullPoint.height = _outsideHeight;
-        }
-        Point sqMid = new Point((int)((p2.x + p3.x) / 2), (int)((p1.y + p4.y) / 2), Average(p1.height, p2.height, p3.height, p4.height));
-        _heights[sqMid.x, sqMid.y] = sqMid.height = (float)(sqMid.height + (_rng.NextDouble() * 2 - 1.0f) * _variation);
+        Point sqMid = new Point((int)((p2.x + p3.x) / 2), (int)((p1.y + p4.y) / 2), _average(p1.z, p2.z, p3.z, p4.z));
+        _heights[(int)sqMid.x, (int)sqMid.y] = sqMid.z += Random.Range(-_variation, _variation);
+    }
+
+    private static bool _isPointInside(Point point, float res)
+    {
+        return point.x >= 0 && point.x < res && point.y >= 0 && point.y < res;
+    }
+
+    private static float _average(float x1, float x2, float x3, float x4)
+    {
+        return (x1 + x2 + x3 + x4) / 4;
     }
 }
