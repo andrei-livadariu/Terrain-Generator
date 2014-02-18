@@ -71,7 +71,7 @@ public class DiamondSquareTerrain : EditorWindow
         generator = new DiamondSquare(parameters);
         currentSelection.heightmapResolution = generator.Resolution;
         generator.Generate();
-        currentSelection.SetHeights(0, 0, generator.GetHeights());
+        currentSelection.SetHeights(0, 0, generator.Heights);
         float resolutionScale = (currentSelection.heightmapResolution - 1) / 32.0f;
         currentSelection.size = new Vector3(125.0f * (resolutionScale), 600.0f, 125.0f * (resolutionScale));
         currentIteration = 0;
@@ -85,7 +85,7 @@ public class DiamondSquareTerrain : EditorWindow
         }
         generator.Iterate();
         currentSelection.heightmapResolution = generator.IntermediateResolution;
-        currentSelection.SetHeights(0, 0, generator.GetIntermediateHeights());
+        currentSelection.SetHeights(0, 0, generator.IntermediateHeights);
 
         int iResolution = generator.IntermediateResolution - 1;
         float resolutionScale = (generator.Resolution - 1) / 32.0f;

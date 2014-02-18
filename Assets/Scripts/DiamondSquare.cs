@@ -49,6 +49,42 @@ public class DiamondSquare
         get { return ((_res - 1) / _iterationStep) + 1; }
     }
 
+    public float[,] Heights
+    {
+        get
+        {
+            float[,] heights = new float[_res, _res];
+            int i, j;
+            for (i = 0; i < _res; ++i)
+            {
+                for (j = 0; j < _res; ++j)
+                {
+                    heights[i, j] = _heights[i, j] * (float)_heightScaling;
+                }
+            }
+            return heights;
+        }
+    }
+
+    public float[,] IntermediateHeights
+    {
+        get
+        {
+            int iRes = IntermediateResolution;
+            int iStep = _iterationStep;
+            float[,] heights = new float[iRes, iRes];
+            int i, j;
+            for (i = 0; i < iRes; ++i)
+            {
+                for (j = 0; j < iRes; ++j)
+                {
+                    heights[i, j] = _heights[i * iStep, j * iStep] * (float)_heightScaling;
+                }
+            }
+            return heights;
+        }
+    }
+
     public DiamondSquare(DiamondSquareParameters parameters)
     {
         _res = (int)Mathf.Pow(2, parameters.nrIterations) + 1;
@@ -88,40 +124,6 @@ public class DiamondSquare
         {
             Iterate();
         }
-    }
-
-    public float[,] GetHeights()
-    {
-        float[,] heights = new float[_res, _res];
-        int i, j;
-        for (i = 0; i < _res; ++i)
-        {
-            for (j = 0; j < _res; ++j)
-            {
-                heights[i, j] = _heights[i, j] * (float)_heightScaling;
-            }
-        }
-        return heights;
-    }
-
-    public float[,] GetIntermediateHeights()
-    {
-        int iRes = IntermediateResolution;
-        int iStep = _iterationStep;
-        float[,] heights = new float[iRes, iRes];
-        int i, j;
-        /*Debug.Log( "iRes: " + iRes );
-        Debug.Log( "_res: " + _res );
-        Debug.Log( "iStep: " + iStep );
-        Debug.Log( "_iterationStep: " + _iterationStep );*/
-        for (i = 0; i < iRes; ++i)
-        {
-            for (j = 0; j < iRes; ++j)
-            {
-                heights[i, j] = _heights[i * iStep, j * iStep] * (float)_heightScaling;
-            }
-        }
-        return heights;
     }
 
     public void Iterate()
