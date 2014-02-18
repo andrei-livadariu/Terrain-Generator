@@ -35,7 +35,7 @@ public class DiamondSquare
 
     private float[] _seeds;
     private float _variation;
-    private float _H;
+    private float _smoothness;
     private float _outsideHeight;
     private float _heightScaling;
 
@@ -56,7 +56,7 @@ public class DiamondSquare
 
         _seeds = parameters.seeds;
         _variation = parameters.variation;
-        _H = parameters.smoothness;
+        _smoothness = parameters.smoothness;
         _outsideHeight = parameters.outsideHeight;
         _heightScaling = parameters.heightScaling;
 
@@ -139,7 +139,7 @@ public class DiamondSquare
                 );
             }
         }
-        _variation *= Mathf.Pow(2, -_H);
+        _variation *= Mathf.Pow(2, -_smoothness);
         _iterationStep /= 2;
     }
 
