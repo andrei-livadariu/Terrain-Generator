@@ -59,6 +59,11 @@ public class DiamondSquare
         }
     }
 
+    private float _RandomVariation
+    {
+        get { return Random.Range(-_variation, _variation); }
+    }
+
     public DiamondSquare(DiamondSquareParameters parameters)
     {
         _res = (int)Mathf.Pow(2, parameters.nrIterations) + 1;
@@ -136,9 +141,9 @@ public class DiamondSquare
         Vector3 dMid = new Vector3(
             (p1.x + p2.x) / 2,
             (p1.y + p3.y) / 2,
-            _avg(p1.z, p2.z, p3.z, p4.z)
+            _avg(p1.z, p2.z, p3.z, p4.z) + _RandomVariation
         );
-        _heights[(int)dMid.x, (int)dMid.y] = dMid.z += Random.Range(-_variation, _variation);
+        _heights[(int)dMid.x, (int)dMid.y] = dMid.z;
         return dMid;
     }
 
@@ -168,9 +173,9 @@ public class DiamondSquare
         Vector3 sqMid = new Vector3(
             (p2.x + p3.x) / 2,
             (p1.y + p4.y) / 2,
-            _avg(p1.z, p2.z, p3.z, p4.z)
+            _avg(p1.z, p2.z, p3.z, p4.z) + _RandomVariation
          );
-        _heights[(int)sqMid.x, (int)sqMid.y] = sqMid.z += Random.Range(-_variation, _variation);
+        _heights[(int)sqMid.x, (int)sqMid.y] = sqMid.z;
     }
 
     private void _initializeHeight(ref Vector3 point)
