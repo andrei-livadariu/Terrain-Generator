@@ -87,6 +87,7 @@ GameObject:
   - 124: {fileID: 350455361}
   - 81: {fileID: 350455359}
   - 114: {fileID: 350455362}
+  - 114: {fileID: 350455363}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -170,6 +171,17 @@ MonoBehaviour:
   ZoomSpeed: 2500
   ClosestZoom: 340
   FarthestZoom: 2500
+--- !u!114 &350455363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 350455356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f410aaab600cddc4a936bb96faf8708d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &494668071
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,6 +317,7 @@ GameObject:
   - 114: {fileID: 1534715162}
   - 154: {fileID: 1534715161}
   - 114: {fileID: 1534715163}
+  - 114: {fileID: 1534715164}
   m_Layer: 0
   m_Name: Terrain
   m_TagString: Untagged
@@ -365,8 +378,19 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1534715159}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e6756c25bda0afe41a63b0fcfc076182, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1534715164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1534715159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9fd52f9826410b489d0a9f4c9823b67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
