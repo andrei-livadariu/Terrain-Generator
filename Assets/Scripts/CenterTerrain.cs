@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(Terrain))]
-public class DynamicTerrain : MonoBehaviour
+public class CenterTerrain : MonoBehaviour
 {
     private TerrainData _terrain;
     private IterativeTerrainGenerator _generator;

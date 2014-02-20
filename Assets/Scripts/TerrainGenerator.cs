@@ -10,9 +10,9 @@ public class TerrainGenerator
     }
 
     protected TerrainData terrain;
-    protected DiamondSquare generator;
+    protected IGeneratorAlgorithm generator;
 
-    public TerrainGenerator(TerrainData terrain, DiamondSquare generator)
+    public TerrainGenerator(TerrainData terrain, IGeneratorAlgorithm generator)
     {
         this.terrain = terrain;
         this.generator = generator;
@@ -33,8 +33,8 @@ public class TerrainGenerator
         
         terrain.SetHeights(0, 0, heights);
 
-        float ResolutionScale = (generator.Resolution - 1) / 32.0f;
-        Vector3 scaleVector = new Vector3(125.0f * (ResolutionScale), 600.0f, 125.0f * (ResolutionScale));
+        float resolutionScale = (generator.Resolution - 1) / 32.0f;
+        Vector3 scaleVector = new Vector3(125.0f * resolutionScale, 600.0f, 125.0f * resolutionScale);
 
         if (ResolutionError != 0)
         {

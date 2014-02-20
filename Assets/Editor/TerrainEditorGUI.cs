@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-public class DiamondSquareTerrain : EditorWindow
+public class TerrainEditorGUI : EditorWindow
 {
     private IterativeTerrainGenerator _generator;
     private DiamondSquareParameters _parameters = new DiamondSquareParameters();
@@ -27,7 +27,7 @@ public class DiamondSquareTerrain : EditorWindow
 
             if (_selection)
             {
-                _generator = new IterativeTerrainGenerator(_selection, new DiamondSquare(_parameters));
+                _generator = new IterativeTerrainGenerator(_selection, new DiamondSquareAlgorithm(_parameters));
             }
         }
     }
@@ -35,7 +35,7 @@ public class DiamondSquareTerrain : EditorWindow
     [MenuItem("Window/TerrainGenerator")]
     private static void Init()
     {
-        EditorWindow.GetWindow(typeof(DiamondSquareTerrain));
+        EditorWindow.GetWindow(typeof(TerrainEditorGUI));
     }
 
     private void Update()

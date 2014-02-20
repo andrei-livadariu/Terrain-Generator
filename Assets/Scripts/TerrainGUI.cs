@@ -25,7 +25,7 @@ public class TerrainGUI : MonoBehaviour
     {
         Terrain terrain = GameObject.FindObjectOfType<Terrain>();
         Parameters = new DiamondSquareParameters();
-        Generator = new IterativeTerrainGenerator(terrain.terrainData, new DiamondSquare(Parameters));
+        Generator = new IterativeTerrainGenerator(terrain.terrainData, new DiamondSquareAlgorithm(Parameters));
     }
 
     private void OnGUI()

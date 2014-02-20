@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using UnityEngine;
 
-public class DiamondSquare
+public class DiamondSquareAlgorithm : IIterativeGeneratorAlgorithm
 {
     private DiamondSquareParameters _parameters;
 
@@ -73,13 +73,13 @@ public class DiamondSquare
         get { return Random.Range(-_variation, _variation); }
     }
 
-    public DiamondSquare(DiamondSquareParameters parameters)
+    public DiamondSquareAlgorithm(DiamondSquareParameters parameters)
     {
         _parameters = parameters;
-        Reset();
+        _reset();
     }
 
-    public void Reset()
+    private void _reset()
     {
         _res = (int)Mathf.Pow(2, _parameters.nrIterations) + 1;
         _heights = new float[_res, _res];
@@ -116,7 +116,7 @@ public class DiamondSquare
 
     public void Generate()
     {
-        Reset();
+        _reset();
         _inProgress = true;
         while (_iterationStep > 1)
         {
@@ -128,7 +128,7 @@ public class DiamondSquare
     {
         if (!_inProgress)
         {
-            Reset();
+            _reset();
             _inProgress = true;
         }
         int i, j;

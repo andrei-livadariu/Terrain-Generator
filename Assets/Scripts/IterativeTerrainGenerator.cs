@@ -5,17 +5,18 @@ public class IterativeTerrainGenerator : TerrainGenerator
 {
     public int CurrentIteration
     {
-        get { return generator.CurrentIteration; }
+        get { return (generator as IIterativeGeneratorAlgorithm).CurrentIteration; }
     }
 
-    public IterativeTerrainGenerator(TerrainData terrain, DiamondSquare generator)
+    public IterativeTerrainGenerator(TerrainData terrain, IIterativeGeneratorAlgorithm generator)
         : base(terrain, generator)
     {
     }
 
     public void Iterate()
     {
-        generator.Iterate();
-        ScaleTerrain(generator.IntermediateResolution, generator.IntermediateHeights);
+        IIterativeGeneratorAlgorithm iterativeGenerator = generator as IIterativeGeneratorAlgorithm;
+        iterativeGenerator.Iterate();
+        ScaleTerrain(iterativeGenerator.IntermediateResolution, iterativeGenerator.IntermediateHeights);
     }
 }
