@@ -316,7 +316,6 @@ GameObject:
   - 4: {fileID: 1534715160}
   - 114: {fileID: 1534715162}
   - 154: {fileID: 1534715161}
-  - 114: {fileID: 1534715163}
   - 114: {fileID: 1534715164}
   m_Layer: 0
   m_Name: Terrain
@@ -372,17 +371,6 @@ MonoBehaviour:
   m_LightmapSize: 1024
   m_DrawTreesAndFoliage: 1
   m_MaterialTemplate: {fileID: 0}
---- !u!114 &1534715163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1534715159}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6756c25bda0afe41a63b0fcfc076182, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1534715164
 MonoBehaviour:
   m_ObjectHideFlags: 0

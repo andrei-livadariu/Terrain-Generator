@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class DiamondSquare
 {
+    private DiamondSquareParameters _parameters;
+
     private int _res;
     private float[,] _heights;
     private int _iterationStep;
@@ -12,6 +14,13 @@ public class DiamondSquare
     private float _smoothness;
     private float _outsideHeight;
     private float _heightScaling;
+    private bool _inProgress;
+    private int _currentIteration;
+
+    public int CurrentIteration
+    {
+        get { return _currentIteration; }
+    }
 
     public int Resolution
     {
@@ -66,21 +75,29 @@ public class DiamondSquare
 
     public DiamondSquare(DiamondSquareParameters parameters)
     {
-        _res = (int)Mathf.Pow(2, parameters.nrIterations) + 1;
-        _heights = new float[_res, _res];
+        _parameters = parameters;
+        Reset();
+    }
 
-        _seeds = parameters.seeds;
-        _variation = parameters.variation;
-        _smoothness = parameters.smoothness;
-        _outsideHeight = parameters.outsideHeight;
-        _heightScaling = parameters.heightScaling;
+    public void Reset()
+    {
+        _res = (int)Mathf.Pow(2, _parameters.nrIterations) + 1;
+        _heights = new float[_res, _res];
+        _currentIteration = 0;
+        _inProgress = false;
+
+        _seeds = _parameters.seeds;
+        _variation = _parameters.variation;
+        _smoothness = _parameters.smoothness;
+        _outsideHeight = _parameters.outsideHeight;
+        _heightScaling = _parameters.heightScaling;
 
         _iterationStep = _res - 1;
 
-        InitializeHeights();
+        _resetHeights();
     }
 
-    public void InitializeHeights()
+    private void _resetHeights()
     {
         int i, j;
         for (i = 0; i < _res; ++i)
@@ -99,6 +116,8 @@ public class DiamondSquare
 
     public void Generate()
     {
+        Reset();
+        _inProgress = true;
         while (_iterationStep > 1)
         {
             Iterate();
@@ -107,6 +126,11 @@ public class DiamondSquare
 
     public void Iterate()
     {
+        if (!_inProgress)
+        {
+            Reset();
+            _inProgress = true;
+        }
         int i, j;
         for (i = 0; i < _res - 1; i += _iterationStep)
         {
@@ -122,6 +146,12 @@ public class DiamondSquare
         }
         _variation *= Mathf.Pow(2, -_smoothness);
         _iterationStep /= 2;
+        ++_currentIteration;
+
+        if (_iterationStep <= 1)
+        {
+            _inProgress = false;
+        }
     }
 
     private void Process(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4)

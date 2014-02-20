@@ -5,58 +5,83 @@ using System.Collections;
 public class TerrainGUI : MonoBehaviour
 {
     private const float ToolbarWidth = 300f;
+    private const float SlowIterateTime = 1f;
 
-    private DynamicTerrain terrain;
+    public IterativeTerrainGenerator Generator
+    {
+        get;
+        protected set;
+    }
+
+    public DiamondSquareParameters Parameters
+    {
+        get;
+        protected set;
+    }
+
+    private bool _isInAnimation = false;
 
     private void Awake()
     {
-        terrain = GameObject.FindObjectOfType<DynamicTerrain>();
+        Terrain terrain = GameObject.FindObjectOfType<Terrain>();
+        Parameters = new DiamondSquareParameters();
+        Generator = new IterativeTerrainGenerator(terrain.terrainData, new DiamondSquare(Parameters));
     }
 
     private void OnGUI()
     {
         GUILayout.BeginArea(new Rect(20, 20, ToolbarWidth, Screen.height));
 
-        GUILayout.Box("Terrain controls");
-        SliderWithLabel("Randomness", ref terrain.Parameters.variation, 0f, 1f);
-        SliderWithLabel("Smoothness", ref terrain.Parameters.smoothness, 0.7f, 1f);
-        SliderWithLabel("Height multiplier", ref terrain.Parameters.heightScaling, 0f, 1f);
+        GUILayout.Box("Terrain parameters");
+        SliderWithLabel("Randomness", ref Parameters.variation, 0f, 1f);
+        SliderWithLabel("Smoothness", ref Parameters.smoothness, 0.7f, 1f);
+        SliderWithLabel("Height multiplier", ref Parameters.heightScaling, 0f, 1f);
         
         GUILayout.Space(20f);
 
         GUILayout.Box("Seeds");
-        SliderWithLabel("Outside height", ref terrain.Parameters.outsideHeight, 0f, 1f);
-        SliderWithLabel("North-west corner", ref terrain.Parameters.seeds[0], 0f, 1f);
-        SliderWithLabel("North-east corner", ref terrain.Parameters.seeds[1], 0f, 1f);
-        SliderWithLabel("South-west corner", ref terrain.Parameters.seeds[2], 0f, 1f);
-        SliderWithLabel("South-east corner", ref terrain.Parameters.seeds[3], 0f, 1f);
+        SliderWithLabel("Outside height", ref Parameters.outsideHeight, 0f, 1f);
+        SliderWithLabel("North-west corner", ref Parameters.seeds[0], 0f, 1f);
+        SliderWithLabel("North-east corner", ref Parameters.seeds[1], 0f, 1f);
+        SliderWithLabel("South-west corner", ref Parameters.seeds[2], 0f, 1f);
+        SliderWithLabel("South-east corner", ref Parameters.seeds[3], 0f, 1f);
 
         GUILayout.Space(20f);
 
         GUILayout.Box("Actions");
-        SliderWithLabel("Iterations", ref terrain.Parameters.nrIterations, 1, 12);
+        SliderWithLabel("Iterations", ref Parameters.nrIterations, 1, 12);
 
         if (GUILayout.Button("Generate"))
         {
-            terrain.Generate();
+            Generator.Generate();
         }
 
         GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
                 if (GUILayout.Button("Iterate"))
                 {
-                    terrain.Iterate();
+                    Generator.Iterate();
                 }
-                if (GUILayout.Button("Animate"))
+                if (GUILayout.Button("Animate") && !_isInAnimation)
                 {
-                    terrain.SlowIterate();
+                    StartCoroutine(IterateCoroutine());
                 }
             GUILayout.EndVertical();
-            GUILayout.Box("Current iteration: " + terrain.CurrentIteration);
+            GUILayout.Box("Current iteration: " + Generator.CurrentIteration);
         GUILayout.EndHorizontal();
 
-
         GUILayout.EndArea();
+    }
+
+    private IEnumerator IterateCoroutine()
+    {
+        _isInAnimation = true;
+        do
+        {
+            Generator.Iterate();
+            yield return new WaitForSeconds(SlowIterateTime);
+        } while (Generator.CurrentIteration < Parameters.nrIterations);
+        _isInAnimation = false;
     }
 
     private void SliderWithLabel(string label, ref float parameter, float minValue, float maxValue)
