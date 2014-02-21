@@ -51,14 +51,14 @@ public class TerrainGUI : MonoBehaviour
         GUILayout.Box("Actions");
         SliderWithLabel("Iterations", ref Parameters.nrIterations, 1, 12);
 
-        if (GUILayout.Button("Generate"))
+        if (GUILayout.Button("Generate") && !_isInAnimation)
         {
             Generator.Generate();
         }
 
         GUILayout.BeginHorizontal();
             GUILayout.BeginVertical();
-                if (GUILayout.Button("Iterate"))
+                if (GUILayout.Button("Iterate") && !_isInAnimation)
                 {
                     Generator.Iterate();
                 }
