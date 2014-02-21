@@ -4,7 +4,7 @@ using System.Collections;
 [System.Serializable]
 public class DiamondSquareParameters
 {
-    public float variation = 0.5f;
+    public float variation = 1f;
     public float smoothness = 0.9f;
     public float outsideHeight = 0.5f;
     public float heightScaling = 0.8f;

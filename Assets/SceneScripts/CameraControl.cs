@@ -5,6 +5,7 @@ public class CameraControl : MonoBehaviour
 {
     private const float ToolbarWidth = 120f;
     private const float ToolbarHeight = 100f;
+    private const float QuitButtonWidth = 50f;
 
     public const string MouseWheelAxis = "Mouse ScrollWheel";
 
@@ -23,20 +24,12 @@ public class CameraControl : MonoBehaviour
 
     private void Update()
     {
-        if (isPlaying)
+        // Quit the application
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // Continuously rotate the camera around the scene center
-            transform.RotateAround(Vector3.zero, Vector3.up, RotationSpeed * Time.deltaTime);
-        }
-        else
-        {
-            HandleControls();
+            Application.Quit();
         }
 
-    }
-
-    private void HandleControls()
-    {
         // Handle up/down movement
         float xAxis = isMovingUp ? 1f : (isMovingDown ? -1f : 0f);
         if (xAxis != 0)
@@ -68,6 +61,13 @@ public class CameraControl : MonoBehaviour
 
     private void OnGUI()
     {
+        GUILayout.BeginArea(new Rect(Screen.width - QuitButtonWidth - 20, 20, QuitButtonWidth, Screen.height));
+        if (GUILayout.Button("Quit"))
+        {
+            Application.Quit();
+        }
+        GUILayout.EndArea();
+
         GUILayout.BeginArea(new Rect(20, Screen.height - ToolbarHeight - 20, ToolbarWidth, ToolbarHeight));
 
         GUILayout.Box("Camera controls");
@@ -90,9 +90,15 @@ public class CameraControl : MonoBehaviour
         isMovingRight   = GUILayout.RepeatButton("\u2192", buttonWidth); // Right arrow
         GUILayout.EndHorizontal();
 
-        if (isZoomingIn || isZoomingOut || isMovingUp || isMovingDown || isMovingLeft || isMovingRight)
+        if (isMovingLeft || isMovingRight)
         {
             isPlaying = false;
+        }
+
+        // "Play" basically means "continuously move right"
+        if (isPlaying)
+        {
+            isMovingRight = true;
         }
 
         GUILayout.EndArea();

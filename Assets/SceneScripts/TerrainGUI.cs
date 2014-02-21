@@ -4,7 +4,7 @@ using System.Collections;
 
 public class TerrainGUI : MonoBehaviour
 {
-    private const float ToolbarWidth = 300f;
+    private const float ToolbarWidth = 200f;
     private const float SlowIterateTime = 1f;
 
     public IterativeTerrainGenerator Generator
@@ -34,17 +34,17 @@ public class TerrainGUI : MonoBehaviour
 
         GUILayout.Box("Terrain parameters");
         SliderWithLabel("Randomness", ref Parameters.variation, 0f, 1f);
-        SliderWithLabel("Smoothness", ref Parameters.smoothness, 0.7f, 1f);
+        SliderWithLabel("Smoothness", ref Parameters.smoothness, 0f, 1f);
         SliderWithLabel("Height multiplier", ref Parameters.heightScaling, 0f, 1f);
         
         GUILayout.Space(20f);
 
         GUILayout.Box("Seeds");
         SliderWithLabel("Outside height", ref Parameters.outsideHeight, 0f, 1f);
-        SliderWithLabel("North-west corner", ref Parameters.seeds[0], 0f, 1f);
-        SliderWithLabel("North-east corner", ref Parameters.seeds[1], 0f, 1f);
-        SliderWithLabel("South-west corner", ref Parameters.seeds[2], 0f, 1f);
-        SliderWithLabel("South-east corner", ref Parameters.seeds[3], 0f, 1f);
+        SliderWithLabel("NW corner", ref Parameters.seeds[0], 0f, 1f);
+        SliderWithLabel("NE corner", ref Parameters.seeds[1], 0f, 1f);
+        SliderWithLabel("SW corner", ref Parameters.seeds[2], 0f, 1f);
+        SliderWithLabel("SE corner", ref Parameters.seeds[3], 0f, 1f);
 
         GUILayout.Space(20f);
 
@@ -87,15 +87,15 @@ public class TerrainGUI : MonoBehaviour
     private void SliderWithLabel(string label, ref float parameter, float minValue, float maxValue)
     {
         GUILayout.BeginHorizontal();
-            GUILayout.Box(label + ": " + parameter, GUILayout.Width(ToolbarWidth / 2));
-            parameter = (float)Math.Round(GUILayout.HorizontalSlider(parameter, minValue, maxValue), 2);
+            GUILayout.Box(label + ": " + parameter, GUILayout.Width(ToolbarWidth * 0.7f));
+            parameter = (float)Math.Round(GUILayout.HorizontalSlider(parameter, minValue, maxValue), 1);
         GUILayout.EndHorizontal();
     }
 
     private void SliderWithLabel(string label, ref int parameter, float minValue, float maxValue)
     {
         GUILayout.BeginHorizontal();
-            GUILayout.Box(label + ": " + parameter, GUILayout.Width(ToolbarWidth / 2));
+            GUILayout.Box(label + ": " + parameter, GUILayout.Width(ToolbarWidth * 0.7f));
             parameter = (int)Math.Floor(GUILayout.HorizontalSlider(parameter, minValue, maxValue));
         GUILayout.EndHorizontal();
     }
