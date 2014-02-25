@@ -168,7 +168,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RotationSpeed: 10
-  ZoomSpeed: 2500
+  ScrollZoomSpeed: 2500
   ClosestZoom: 340
   FarthestZoom: 2500
 --- !u!114 &350455363
@@ -370,7 +370,7 @@ MonoBehaviour:
   m_LightmapIndex: -1
   m_LightmapSize: 1024
   m_DrawTreesAndFoliage: 1
-  m_MaterialTemplate: {fileID: 0}
+  m_MaterialTemplate: {fileID: 2100000, guid: 472221257744bb34c8a75acb89052e25, type: 2}
 --- !u!114 &1534715164
 MonoBehaviour:
   m_ObjectHideFlags: 0
