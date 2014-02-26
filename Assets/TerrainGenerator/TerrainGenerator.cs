@@ -3,16 +3,11 @@ using UnityEngine;
 
 public class TerrainGenerator
 {
-    public float ResolutionError
-    {
-        get;
-        protected set;
-    }
-
     public Action<TerrainData, float> OnTerrainGenerated;
 
     protected TerrainData terrain;
     protected IGeneratorAlgorithm generator;
+    protected float resolutionError;
 
     public TerrainGenerator(TerrainData terrain, IGeneratorAlgorithm generator)
     {
@@ -26,7 +21,7 @@ public class TerrainGenerator
         ScaleTerrain(generator.Resolution, generator.Heights);
         if (OnTerrainGenerated != null)
         {
-            OnTerrainGenerated(terrain, ResolutionError);
+            OnTerrainGenerated(terrain, resolutionError);
         }
     }
 
@@ -35,17 +30,17 @@ public class TerrainGenerator
         terrain.heightmapResolution = resolution;
         // TerrainData keeps a minimum resolution of 33 even though we are setting it to a smaller number
         // We are taking this into account when scaling and centering the terrain so that we maintain a constant scale
-        ResolutionError = (terrain.heightmapResolution - 1f) / (resolution - 1f);
+        resolutionError = (terrain.heightmapResolution - 1f) / (resolution - 1f);
         
         terrain.SetHeights(0, 0, heights);
 
         float resolutionScale = (generator.Resolution - 1) / 32.0f;
         Vector3 scaleVector = new Vector3(125.0f * resolutionScale, 600.0f, 125.0f * resolutionScale);
 
-        if (ResolutionError > 1)
+        if (resolutionError > 1)
         {
-            scaleVector.x *= ResolutionError;
-            scaleVector.z *= ResolutionError;
+            scaleVector.x *= resolutionError;
+            scaleVector.z *= resolutionError;
         }
 
         terrain.size = scaleVector;
@@ -108,7 +103,7 @@ public class TerrainGenerator
                 // now assign the values to the correct location in the array
                 for (z = 0; z < terrain.alphamapLayers; ++z)
                 {
-                    splatmapData[(int)(x / ResolutionError), (int)(y / ResolutionError), z] = splat[z];
+                    splatmapData[(int)(x / resolutionError), (int)(y / resolutionError), z] = splat[z];
                 }
             }
         }

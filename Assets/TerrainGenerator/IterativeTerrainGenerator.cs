@@ -20,7 +20,7 @@ public class IterativeTerrainGenerator : TerrainGenerator
         ScaleTerrain(iterativeGenerator.IntermediateResolution, iterativeGenerator.IntermediateHeights);
         if (OnTerrainGenerated != null)
         {
-            OnTerrainGenerated(terrain, ResolutionError);
+            OnTerrainGenerated(terrain, resolutionError);
         }
     }
 }
