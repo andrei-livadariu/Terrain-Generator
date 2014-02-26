@@ -20,17 +20,23 @@ public class TerrainGUI : MonoBehaviour
     }
 
     private bool _isInAnimation = false;
+    private Rect _toolbarPosition;
+    private Rect _creditsPosition;
 
     private void Awake()
     {
         Terrain terrain = GameObject.FindObjectOfType<Terrain>();
         Parameters = new DiamondSquareParameters();
         Generator = new IterativeTerrainGenerator(terrain.terrainData, new DiamondSquareAlgorithm(Parameters));
+
+        _toolbarPosition = new Rect(20, 20, ToolbarWidth, Screen.height);
     }
 
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(20, 20, ToolbarWidth, Screen.height));
+        GUILayout.BeginArea(_toolbarPosition);
+
+        GUILayout.Box("Terrain Generator\ndeveloped by Andrei Livadariu");
 
         GUILayout.Box("Terrain parameters");
         SliderWithLabel("Randomness", ref Parameters.variation, 0f, 1f);

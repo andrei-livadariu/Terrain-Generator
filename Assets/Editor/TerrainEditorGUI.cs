@@ -32,7 +32,7 @@ public class TerrainEditorGUI : EditorWindow
         }
     }
 
-    [MenuItem("Window/TerrainGenerator")]
+    [MenuItem("Window/Terrain Generator")]
     private static void Init()
     {
         EditorWindow.GetWindow(typeof(TerrainEditorGUI));
@@ -63,6 +63,9 @@ public class TerrainEditorGUI : EditorWindow
             return;
         }
 
+        EditorGUILayout.LabelField("Terrain Generator - developed by Andrei Livadariu");
+        
+        EditorGUILayout.Space();
         EditorGUILayout.LabelField("Terrain parameters");
         _parameters.variation = EditorGUILayout.Slider("Variation", (float)Math.Round(_parameters.variation, 2), 0f, 1.0f);
         _parameters.smoothness = EditorGUILayout.Slider("Smoothness", (float)Math.Round(_parameters.smoothness, 2), 0.7f, 1.0f);
@@ -91,7 +94,11 @@ public class TerrainEditorGUI : EditorWindow
         {
             _generator.Iterate();
         }
-        EditorGUILayout.LabelField("Iteration: " + _generator.CurrentIteration);
+
+        if (_generator != null)
+        {
+            EditorGUILayout.LabelField("Iteration: " + _generator.CurrentIteration);
+        }
         EditorGUILayout.EndHorizontal();
 
         this.Repaint();
