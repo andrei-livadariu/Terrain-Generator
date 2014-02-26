@@ -18,5 +18,9 @@ public class IterativeTerrainGenerator : TerrainGenerator
         IIterativeGeneratorAlgorithm iterativeGenerator = generator as IIterativeGeneratorAlgorithm;
         iterativeGenerator.Iterate();
         ScaleTerrain(iterativeGenerator.IntermediateResolution, iterativeGenerator.IntermediateHeights);
+        if (OnTerrainGenerated != null)
+        {
+            OnTerrainGenerated(terrain, ResolutionError);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class TerrainGenerator
 {
@@ -7,6 +8,8 @@ public class TerrainGenerator
         get;
         protected set;
     }
+
+    public Action<TerrainData, float> OnTerrainGenerated;
 
     protected TerrainData terrain;
     protected IGeneratorAlgorithm generator;
@@ -21,6 +24,10 @@ public class TerrainGenerator
     {
         generator.Generate();
         ScaleTerrain(generator.Resolution, generator.Heights);
+        if (OnTerrainGenerated != null)
+        {
+            OnTerrainGenerated(terrain, ResolutionError);
+        }
     }
 
     protected void ScaleTerrain(int resolution, float[,] heights)

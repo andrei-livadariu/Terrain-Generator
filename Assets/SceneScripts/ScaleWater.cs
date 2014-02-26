@@ -3,16 +3,14 @@ using System.Collections;
 
 public class ScaleWater : MonoBehaviour
 {
-    private TerrainData _terrain;
-
-    private void Awake()
+    private void Start()
     {
-        _terrain = GameObject.FindObjectOfType<Terrain>().terrainData;
+        GameObject.FindObjectOfType<TerrainGUI>().Generator.OnTerrainGenerated += Rescale;
     }
 
-    private void Update()
+    private void Rescale(TerrainData terrain, float resolutionError)
     {
-        transform.localScale = new Vector3(_terrain.size[0] * 0.02f, 1f, _terrain.size[2] * 0.01f);
+        transform.localScale = new Vector3(terrain.size[0] * 0.02f, 1f, terrain.size[2] * 0.01f);
         transform.localPosition = new Vector3(transform.localScale.x * 25f, transform.localPosition.y, transform.localScale.z * 50f);
     }
 }

@@ -4,24 +4,20 @@ using System.Collections;
 [RequireComponent(typeof(Terrain))]
 public class CenterTerrain : MonoBehaviour
 {
-    private TerrainData _terrain;
-    private IterativeTerrainGenerator _generator;
-
-    public void Awake()
+    public void Start()
     {
-        _terrain = GetComponent<Terrain>().terrainData;
-        _generator = GameObject.FindObjectOfType<TerrainGUI>().Generator;
+        GameObject.FindObjectOfType<TerrainGUI>().Generator.OnTerrainGenerated += Recenter;
     }
 
-    private void Update()
+    private void Recenter(TerrainData terrain, float resolutionError)
     {
         // Keep the terrain centered
-        Vector3 offset = _terrain.size;
-        if (_generator.ResolutionError != 0)
+        Vector3 offset = terrain.size;
+        if (resolutionError != 0)
         {
-            float errorCorrection = 1f - 1f / _generator.ResolutionError;
-            offset.x -= _terrain.size.x * errorCorrection;
-            offset.z -= _terrain.size.z * errorCorrection;
+            float errorCorrection = 1f - 1f / resolutionError;
+            offset.x -= terrain.size.x * errorCorrection;
+            offset.z -= terrain.size.z * errorCorrection;
         }
         transform.position = -offset / 2;
     }
