@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public interface IGeneratorAlgorithm
+﻿public interface IGeneratorAlgorithm
 {
     int Resolution { get; }
     float[,] Heights { get; }

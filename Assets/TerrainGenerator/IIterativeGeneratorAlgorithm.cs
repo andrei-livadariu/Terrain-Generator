@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-public interface IIterativeGeneratorAlgorithm : IGeneratorAlgorithm
+﻿public interface IIterativeGeneratorAlgorithm : IGeneratorAlgorithm
 {
     int CurrentIteration { get; }
     int IntermediateResolution { get; }
