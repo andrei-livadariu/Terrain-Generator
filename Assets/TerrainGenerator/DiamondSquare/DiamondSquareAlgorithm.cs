@@ -17,6 +17,9 @@ public class DiamondSquareAlgorithm : IIterativeGeneratorAlgorithm
     private bool _inProgress;
     private int _currentIteration;
 
+    private float _minHeight;
+    private float _maxHeight;
+
     public int CurrentIteration
     {
         get { return _currentIteration; }
@@ -42,7 +45,7 @@ public class DiamondSquareAlgorithm : IIterativeGeneratorAlgorithm
             {
                 for (j = 0; j < _res; ++j)
                 {
-                    heights[i, j] = _heights[i, j] * (float)_heightScaling;
+                    heights[i, j] = Mathf.InverseLerp(_minHeight, _maxHeight, _heights[i, j]) * _heightScaling;
                 }
             }
             return heights;
@@ -61,7 +64,7 @@ public class DiamondSquareAlgorithm : IIterativeGeneratorAlgorithm
             {
                 for (j = 0; j < iRes; ++j)
                 {
-                    heights[i, j] = _heights[i * iStep, j * iStep] * (float)_heightScaling;
+                    heights[i, j] = Mathf.InverseLerp(_minHeight, _maxHeight, _heights[i * iStep, j * iStep]) * _heightScaling;
                 }
             }
             return heights;
@@ -131,6 +134,10 @@ public class DiamondSquareAlgorithm : IIterativeGeneratorAlgorithm
             _reset();
             _inProgress = true;
         }
+        
+        _minHeight = float.MaxValue;
+        _maxHeight = float.MinValue;
+
         int i, j;
         for (i = 0; i < _res - 1; i += _iterationStep)
         {
@@ -174,6 +181,7 @@ public class DiamondSquareAlgorithm : IIterativeGeneratorAlgorithm
             _avg(p1.z, p2.z, p3.z, p4.z) + _RandomVariation
         );
         _heights[(int)dMid.x, (int)dMid.y] = dMid.z;
+        _trackMinMaxHeight(dMid.z);
         return dMid;
     }
 
@@ -206,11 +214,24 @@ public class DiamondSquareAlgorithm : IIterativeGeneratorAlgorithm
             _avg(p1.z, p2.z, p3.z, p4.z) + _RandomVariation
          );
         _heights[(int)sqMid.x, (int)sqMid.y] = sqMid.z;
+        _trackMinMaxHeight(sqMid.z);
     }
 
     private void _initializeHeight(ref Vector3 point)
     {
         point.z = _isPointInside(point, _res) ? _heights[(int)point.x, (int)point.y] : _outsideHeight;
+    }
+
+    private void _trackMinMaxHeight(float height)
+    {
+        if (height > _maxHeight)
+        {
+            _maxHeight = height;
+        }
+        else if (_minHeight > 0 && height < _minHeight)
+        {
+            _minHeight = Mathf.Max(height, 0f);
+        }
     }
 
     private static bool _isPointInside(Vector3 point, float res)
