@@ -4,7 +4,9 @@ public class CameraControl : MonoBehaviour
 {
     private const float ToolbarWidth = 120f;
     private const float ToolbarHeight = 100f;
+#if !UNITY_WEBPLAYER
     private const float QuitButtonWidth = 50f;
+#endif
 
     public const string MouseWheelAxis = "Mouse ScrollWheel";
 
@@ -21,13 +23,33 @@ public class CameraControl : MonoBehaviour
     private bool isMovingLeft   = false;
     private bool isMovingRight  = false;
 
+#if !UNITY_WEBPLAYER
+    private Rect quitButtonPosition;
+#endif
+    private Rect cameraToolbarPosition;
+
+    private void Awake()
+    {
+#if !UNITY_WEBPLAYER
+        quitButtonPosition = new Rect(Screen.width - QuitButtonWidth - 20, 20, QuitButtonWidth, Screen.height);
+#endif
+
+#if UNITY_WEBPLAYER
+        cameraToolbarPosition = new Rect(Screen.width - ToolbarWidth - 20, 20, ToolbarWidth, ToolbarHeight);
+#else
+        cameraToolbarPosition = new Rect(20, Screen.height - ToolbarHeight - 20, ToolbarWidth, ToolbarHeight);
+#endif
+    }
+
     private void Update()
     {
+#if !UNITY_WEBPLAYER
         // Quit the application
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
         }
+#endif
 
         // Handle up/down movement
         float xAxis = isMovingUp ? 1f : (isMovingDown ? -1f : 0f);
@@ -60,14 +82,16 @@ public class CameraControl : MonoBehaviour
 
     private void OnGUI()
     {
-        GUILayout.BeginArea(new Rect(Screen.width - QuitButtonWidth - 20, 20, QuitButtonWidth, Screen.height));
+#if !UNITY_WEBPLAYER
+        GUILayout.BeginArea(quitButtonPosition);
         if (GUILayout.Button("Quit"))
         {
             Application.Quit();
         }
         GUILayout.EndArea();
+#endif
 
-        GUILayout.BeginArea(new Rect(20, Screen.height - ToolbarHeight - 20, ToolbarWidth, ToolbarHeight));
+        GUILayout.BeginArea(cameraToolbarPosition);
 
         GUILayout.Box("Camera controls");
         if (GUILayout.Button(isPlaying ? "Pause" : "Play"))
